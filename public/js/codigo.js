@@ -81,10 +81,6 @@ function contenidosUsuarioRegistrado(usuario) {
       <nav class="navbar bg-warning navbar-dark">
         <a class="navbar-brand">Territorios</a>
         <div id="botones" class="form-inline">
-          <input id="email2" type="email" placeholder="Introduce tu e-mail"
-            class="form-control form-control-sm mr-sm-2">
-          <input id="password2" type="password" placeholder="Introduce tu constraseña"
-            class="form-control form-control-sm mr-sm-2">
           <button id="conectar" class="btn btn-dark my-2 my-sm-0 btn-sm">Conectar</button>
         </div>
         <div id="territorios" class="form-inline">
