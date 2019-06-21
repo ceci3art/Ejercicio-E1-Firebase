@@ -2,7 +2,6 @@
 // Ejercicio publicación
 // Fecha:17/06/2019
 
-
 // Firebase configuration
 var firebaseConfig = {
   apiKey: "AIzaSyBv2KSC6MUeTDEct7jIv0_vAVXHu1mbj0U",
@@ -105,41 +104,39 @@ function contenidosUsuarioRegistrado(usuario) {
 
     <h2>Gestión de datos</h2>
     <p>Todos los datos son obligatorios</p>
-    <form action="#" class="form-inline">
+    <form action="#">
       <div class="form-row">
-      <div class="col-md-2 mb-3">
-        <label for="tipo">Tipo:</label>
-        <input  type="number" id="tipo" placeholder="Tipo de territorio" class="form-control" maxlenght="2" onchange="valtipo();" required>
+      <div class="form-inline">
+        <label for="tipo" class="col-sm-3 col-form-label">Tipo:</label>
+        <input  type="number" id="tipo" placeholder="Tipo de territorio" class="form-control my-3 col-sm-4"  onchange="valtipo();" required>
       </div>
-      <div class="col-md-2 mb-3">
-        <label for="iden">Territorio:</label>
-        <input type="text" id="iden" placeholder="Introduzce  territorio"class="form-control" maxlenght="3" onchange="validen();" required>
+      <div class="form-inline">
+        <label for="iden" class="col-sm-3  col-form-label">Territorio:</label>
+        <input type="text" id="iden" placeholder="Introduzce  territorio"  class="form-control my-3 col-sm-4" onchange="validen();" required>
       </div>
-      <div class="col-md-4 mb-3">
-        <label for="fechaIni">Fecha Inicio:</label>
-        <input type="date" id="fechaIni" class="form-control" maxlegth="10" placeholder="Introduzce fecha de inicio" onchange="valfechaIni();" required>
+      <div class="form-inline">
+        <label for="fechaIni" class="col-sm-3 col-form-label">Fecha Inicio:</label>
+        <input type="date" id="fechaIni" class="form-control my-3 col-sm-4"  placeholder="Introduzce fecha de inicio" onchange="valfechaIni();" required>
       </div>
-      <div class="col-md-4 mb-3">
-          <label for="fechaFin">Fecha Final:</label>
-          <input type="date" id="fechaFin" class="form-control" placeholder="Introduzce fecha final" maxlegth="10" onchange="valfechaFin();" required>
+      <div class="form-inline">
+          <label for="fechaFin" class="col-sm-3 col-form-label">Fecha Final:</label>
+          <input type="date" id="fechaFin" class="form-control my-3 col-sm-4" placeholder="Introduzce fecha final"  onchange="valfechaFin();" required>
       </div>
       </div>
 
-      <div class="form-row">
-      <div class="col-md-4 mb-3">
-        <label for="cuando">Cuando:</label>
-        <input type="text" id="cuando" class="form-control" placeholder="¿Cuándo?" maxlenght="50" onchange="valcuando();" required>
+     
+      <div class="form-inline">
+        <label for="cuando" class="col-sm-3 col-form-label">Cuándo:</label>
+        <input type="text" id="cuando" class="form-control my-3 col-sm-4" placeholder="¿Cuándo?" max="50" onchange="valcuando();" required>
       </div>
+      <div class="form-inline">
+      <label for="empleado" class="col-sm-3 col-form-label">Quién:</label>
+      <input type="number" id="empleado" class="form-control my-3 col-sm-4" max="120" min="1" placeholder="¿Quién?" onchange="valempleado();" required>
+    </div>
 
-      <div class="col-sm3">
-        <label for="empleado">Nombre:</label>
-        <input type="number" id="empleado" placeholder="¿Quién?" class="form-control" max="120" min="1" onchange="valempleado();" required>
+      <div id="act"></div><p><button class="btn btn-info my-3" id="guardar">Guardar</button></p>
       </div>
-      </div>
-      <button class="btn btn-info my-3" id="guardar">Guardar></button>
-      <div id="act"></div>
-      <div class="col-sm-3"></div>
-      </form>
+    </form>
 
       <table class="table">
         <thead>
@@ -283,124 +280,124 @@ function borrarDatos(parId) {
         console.error("Error: ", error);
       });
   }
+}
 
-  //  Editar datos de documentos
-  function editarDatos(parId, parTipo, parIden, parfechaIni, parfechaFin, parCuando, parEmpleado) {
-    document.getElementById("tipo").value = parTipo;
-    document.getElementById("iden").value = parIden
-    document.getElementById("fechaIni").value = parfechaIni;
-    document.getElementById("fechaFin").value = parfechaFin;
-    document.getElementById("cuando").value = parCuando;
-    document.getElementById("empleado").value = parEmpleado;
+//  Editar datos de documentos
+function editarDatos(parId, parTipo, parIden, parfechaIni, parfechaFin, parCuando, parEmpleado) {
+  document.getElementById("tipo").value = parTipo;
+  document.getElementById("iden").value = parIden
+  document.getElementById("fechaIni").value = parfechaIni;
+  document.getElementById("fechaFin").value = parfechaFin;
+  document.getElementById("cuando").value = parCuando;
+  document.getElementById("empleado").value = parEmpleado;
+  $("#guardar").css("display", "none");
+  $(".linea").attr("disabled", true);
+  $("#act").append("<button class='btn btn-info my-3' id='actualizar'>Guardar</button>");
+  $("#actualizar").on("click", function () {
+    var userRef = db.collection("usuarios").doc(parId);
+    tipos = document.getElementById("tipo").value;
+    idens = document.getElementById("iden").value;
+    fechaInis = document.getElementById("fechaIni").value;
+    fechaFins = document.getElementById("fechaFin").value;
+    cuandos = document.getElementById("cuando").value;
+    empleados == document.getElementById("empleado").value;
 
-    $("#guardar").css("display", "none");
-    $(".linea").attr("disabled", true);
-    $("#act").append("<button class='btn btn-info my-3' id='actualizar'>Guardar</button>");
-    $("#actualizar").on("click", function () {
-      var userRef = db.collection("usuarios").doc(parId);
-      tipos = document.getElementById("tipo").value;
-      idens = document.getElementById("iden").value;
-      fechaInis = document.getElementById("fechaIni").value;
-      fechaFins = document.getElementById("fechaFin").value;
-      cuandos = document.getElementById("cuando").value;
-      empleados == document.getElementById("empleado").value;
-
-      if (tipos.trim() === "" || idens.trim() === "" || fechaInis.trim() === "" || fechaFins.trim() === "" || cuandos.trim() === "" || empleados.trim() === "") {
-        alert("Todos los datos son obligatorios.");
-        return false;
-      } else {
-        return userRef.update({
-            tipo: document.getElementById("tipo").value,
-            iden: document.getElementById("iden").value,
-            fechaIni: document.getElementById("fechaIni").value,
-            fechaFin: document.getElementById("fechaFin").value,
-            cuando: document.getElementById("cuando").value,
-            empleado: document.getElementById("empleado").value
-          })
-          .then(function () {
-            console.log("Usuario actualizado correctamente.");
-            document.getElementById("tipo").value = "";
-            document.getElementById("iden").value = "";
-            document.getElementById("fechaIni").value = "";
-            document.getElementById("fechaFin").value = "";
-            document.getElementById("cuando").value = "";
-            document.getElementById("empleado").value = "";
-            $("#guardar").css("display", "inline");
-            $(".linea").attr("disabled", false);
-            $("#act").empty();
-          })
-          .catch(function (error) {
-            // The document probably doesn't exist.
-            console.error("Error actualizando datos: ", error);
-          });
-      }
-    })
-  }
-
-  function valtipo() {
-    var patt = /^(?:[1-9]|0[1-9]|10)$/;
-    var tipos = document.getElementById("tipo").value;
-    if (!patt.test(tipos)) {
-      alert("Dato incorrecto, introduzca un dato del 1 a 10.");
+    if (tipos.trim() === "" || idens.trim() === "" || fechaInis.trim() === "" || fechaFins.trim() === "" || cuandos.trim() === "" || empleados.trim() === "") {
+      alert("Todos los datos son obligatorios.");
       return false;
     } else {
-      return true
+      return userRef.update({
+          tipo: document.getElementById("tipo").value,
+          iden: document.getElementById("iden").value,
+          fechaIni: document.getElementById("fechaIni").value,
+          fechaFin: document.getElementById("fechaFin").value,
+          cuando: document.getElementById("cuando").value,
+          empleado: document.getElementById("empleado").value
+        })
+        .then(function () {
+          console.log("Usuario actualizado correctamente.");
+          document.getElementById("tipo").value = "";
+          document.getElementById("iden").value = "";
+          document.getElementById("fechaIni").value = "";
+          document.getElementById("fechaFin").value = "";
+          document.getElementById("cuando").value = "";
+          document.getElementById("empleado").value = "";
+          $("#guardar").css("display", "inline");
+          $(".linea").attr("disabled", false);
+          $("#act").empty();
+        })
+        .catch(function (error) {
+          // The document probably doesn't exist.
+          console.error("Error actualizando datos: ", error);
+        });
     }
-  }
+  })
+}
 
-  function validen() {
-    var patt = /^(?:[1-9]|0[1-9]|10)$"/;
-    var idens = document.getElementById("iden").value;
-    if (!patt.test(idens)) {
-      alert("Dato incorrecto, introduzca un dato del 1 a 300.");
-      return false;
-    } else {
-      return true
-    }
+function valtipo() {
+  var patt = /^(?:[1-9]|0[1-9]|10)$/;
+  var tipos = document.getElementById("tipo").value;
+  if (!patt.test(tipos)) {
+    alert("Dato incorrecto, introduzca un dato del 1 a 10.");
+    return false;
+  } else {
+    return true
   }
+}
 
-  function valfechaIni() {
-    fechais = new Date(fechaIni.split("/").reverse().join("/"));
-    if (fechais <= new Date(fechaIni.value)) {
-      return true;
-    } else {
-      alert("Dato incorrecto, introduzca una fecha anterior a hoy.")
-      document.getElementById("fechaIni");
-      return false;
-    }
+function validen() {
+  var patt = /^(?:[1-9]|0[1-9]|10)$"/;
+  var idens = document.getElementById("iden").value;
+  if (!patt.test(idens)) {
+    alert("Dato incorrecto, introduzca un dato del 1 a 300.");
+    return false;
+  } else {
+    return true
   }
+}
 
-  function valfechaFin() {
-    fechafs = new Date(fechaIni.split("/").reverse().join("/"));
-    if (fechafs <= new Date(fechaFin.value)) {
-      return true;
-    } else {
-      alert(fechaFins.value + "Dato incorrecto, introduzca una fecha posterior a la fecha inicial.");
-      document.getElementById("fechaFin");
-      return false;
-    }
+function valfechaIni() {
+  fechais = new Date(fechaIni.split("/").reverse().join("/"));
+  if (fechais <= new Date(fechaIni.value)) {
+    return true;
+  } else {
+    alert("Dato incorrecto, introduzca una fecha anterior a hoy.")
+    document.getElementById("fechaIni");
+    return false;
   }
+}
 
-  function valcuando() {
-    var patt = /^[A-Za-zÑñÁÉÍÓúáéíóúÇç\s]{1,50}$"/;
-    var cuandos = document.getElementById("cuando").value;
-    if (!patt.test(cuando)) {
-      alert(cuandos.value + "Dato incorrecto, introduzca máximo 50 caracteres.");
-      return false;
-    } else {
-      return true;
-    }
+function valfechaFin() {
+  fechafs = new Date(fechaIni.split("/").reverse().join("/"));
+  if (fechafs <= new Date(fechaFin.value)) {
+    return true;
+  } else {
+    alert(fechaFins.value + "Dato incorrecto, introduzca una fecha posterior a la fecha inicial.");
+    document.getElementById("fechaFin");
+    return false;
   }
+}
 
-  function valEmpleado() {
-    var patt = /^(120|1[0-1][0-9]|[1-9]?[0-9])$/;
-    var empleados = document.getElementById("empleado").value;
-    if (patt.test(empleados)) {
-      alert("Dato incorrecto, intruduzca un número entre 1 y 120")
-      return false;
-    } else {
-      return true;
-    }
+function valcuando() {
+  var patt = /^[A-Za-zÑñÁÉÍÓúáéíóúÇç\s]{1,50}$"/;
+  var cuandos = document.getElementById("cuando").value;
+  if (!patt.test(cuando)) {
+    alert(cuandos.value + "Dato incorrecto, introduzca máximo 50 caracteres.");
+    return false;
+  } else {
+    return true;
   }
+}
 
-  observador();
+function valempleado() {
+  var patt = /^(120|1[0-1][0-9]|[1-9]?[0-9])$/;
+  var empleados = document.getElementById("empleado").value;
+  if (patt.test(empleados)) {
+    alert("Dato incorrecto, intruduzca un número entre 1 y 120")
+    return false;
+  } else {
+    return true;
+  }
+}
+
+observador();

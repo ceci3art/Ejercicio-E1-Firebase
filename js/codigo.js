@@ -106,7 +106,7 @@ function contenidosUsuarioRegistrado(usuario) {
     <p>Todos los datos son obligatorios</p>
     <form action="#" class="form-inline">
       <div class="form-row">
-      <div class="col-md-2 mb-3">
+      <div class="col-md-2 m"
         <label for="tipo">Tipo:</label>
         <input  type="number" id="tipo" placeholder="Tipo de territorio" class="form-control" maxlenght="2" onchange="valtipo();" required>
       </div>
