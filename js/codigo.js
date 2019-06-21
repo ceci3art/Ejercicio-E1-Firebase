@@ -1,3 +1,7 @@
+// Autor: Cecilia Martínez Ibáñez
+// Ejercicio publicación
+// Fecha:17/06/2019
+
 // Firebase configuration
 var firebaseConfig = {
   apiKey: "AIzaSyBv2KSC6MUeTDEct7jIv0_vAVXHu1mbj0U",
@@ -10,14 +14,34 @@ var firebaseConfig = {
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-
-
 // Initialize Cloud Firestore through Firebase
 var db = firebase.firestore();
 
 // Definción de eventos para botones de registro y conexión
+
+var re = document.getElementById("registrar");
+re.addEventListener("click", registrar, false);
 var co = document.getElementById("conectar");
 co.addEventListener("click", conectar, false);
+
+function registrar() {
+  var email = document.getElementById("email1").value;
+  var password = document.getElementById("password1").value;
+
+  firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then(function () {
+      confirmar();
+      $("#botones").css("visibility", "hidden");
+      $("#cerrarconexion").css("display", "inline");
+      $("#modalRegistro").modal('hide');
+    })
+    .catch(function (error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      alert("Error: " + errorCode + ". " + errorMessage);
+    });
+}
 
 function conectar() {
   var email = document.getElementById("email2").value;
@@ -50,7 +74,7 @@ function observador() {
       var uid = user.uid;
       var providerData = user.providerData;
 
-      console.log('Usuario verificado: ' + emailVerified);
+      console.log("Usuario verificado:" + emailVerified);
       $("#botones").css("visibility", "hidden");
       $("#cerrarconexion").css("display", "inline");
     } else {
@@ -58,85 +82,76 @@ function observador() {
       console.log("No existe ningún usuario activo.");
       var contenido = document.getElementById("contenido");
       contenido.innerHTML = `
-      <p>Conéctate para ver los contenidos exclusivos para usuarios registrados.</p>
+      <p>Conéctate para acceder a tu cuenta de registro de terrenos.</p>
       `;
     }
   });
 }
 
+
 function contenidosUsuarioRegistrado(usuario) {
   var contenido = document.getElementById("contenido");
   if (usuario.emailVerified) {
     contenido.innerHTML = `
-      <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
-        <h4 class="alert-heading">¡Bienvenido ${usuario.email}!</h4>
+    <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+      <h4 class="alert-heading">¡Bienvenido ${usuario.email}!</h4>
+      <p>Territorios / Usuarios.</p>
+      <hr>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
 
-        <hr>
-        <p class="mb-0">Tenemos muchos contenidos exclusivos solo para usuarios registrados como tú.</p>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+    <h2>Gestión de datos</h2>
+    <p>Todos los datos son obligatorios</p>
+    <form action="#" class="form-inline">
+      <div class="form-row">
+      <div class="col-md-2 mb-3">
+        <label for="tipo">Tipo:</label>
+        <input  type="number" id="tipo" placeholder="Tipo de territorio" class="form-control" maxlenght="2" onchange="valtipo();" required>
       </div>
-      <form action="#">
-      <nav class="navbar bg-warning navbar-dark">
-        <a class="navbar-brand">Territorios</a>
-        <div id="botones" class="form-inline">
-          <input id="email2" type="email" placeholder="Introduce tu e-mail"
-            class="form-control form-control-sm mr-sm-2">
-          <input id="password2" type="password" placeholder="Introduce tu constraseña"
-            class="form-control form-control-sm mr-sm-2">
-          <button id="conectar" class="btn btn-dark my-2 my-sm-0 btn-sm">Conectar</button>
-        </div>
-        <div id="territorios" class="form-inline">
-          <div class="form-inline">
-            <label for="tipo" class="col-sm-2 col-form-label"></label>
-            <input id="tipo" type="number" placeholder="Tipo de territorio" class="form-control-sm mr-sm-2"
-              maxlenght="2" pattern="/^(?:[1-9]|0[1-9]|10)$/">
-          </div>
-          <div class="form-inline">
-            <label for="iden" class="col-sm-2 col-form-label"></label>
-            <input id="iden" type="number" placeholder="Identificativo" class="form-control-sm mr-sm-2" maxlenght="3"
-              pattern="/(?:\b|-)([1-9]{1,2}[0]?|300)\b/">
-          </div>
+      <div class="col-md-2 mb-3">
+        <label for="iden">Territorio:</label>
+        <input type="text" id="iden" placeholder="Introduzce  territorio"class="form-control" maxlenght="3" onchange="validen();" required>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="fechaIni">Fecha Inicio:</label>
+        <input type="date" id="fechaIni" class="form-control" maxlegth="10" placeholder="Introduzce fecha de inicio" onchange="valfechaIni();" required>
+      </div>
+      <div class="col-md-4 mb-3">
+          <label for="fechaFin">Fecha Final:</label>
+          <input type="date" id="fechaFin" class="form-control" placeholder="Introduzce fecha final" maxlegth="10" onchange="valfechaFin();" required>
+      </div>
+      </div>
 
-          <div class="form-inline">
-            <label for="fechaIni" class="col-sm-2 col-form-label"></label>
-            <input id="fechaIni" type="date" placeholder="Fecha inicial" class="form-control-sm mr-sm-2">
-          </div>
+      <div class="form-row">
+      <div class="col-md-4 mb-3">
+        <label for="cuando">Cuando:</label>
+        <input type="text" id="cuando" class="form-control" placeholder="¿Cuándo?" maxlenght="50" onchange="valcuando();" required>
+      </div>
 
-          <div class="form-inline">
-          <label for="fechaFin" class="col-sm-2 col-form-label"></label>
-          <input id="fechaFin" type="date" placeholder="Fecha fin"  class="form-control-sm mr-sm-2">
-        </div>
-
-          <div class="form-inline">
-            <label for="cuando" class="col-sm-2 col-form-label"></label>
-            <input id="cuando" type="text" placeholder="mañana/tarde/noche" class="form-control-sm mr-sm-2" maxlenght="50" pattern="[A-Za-zÑñÁÉÍÓúáéíóúÇç\s]">
-          </div>
-
-          <div class="form-inline">
-            <label for="empleado" class="col-sm-2 col-form-label"></label>
-            <input id="empleado" type="number" placeholder="Comercial" class="form-control-sm mr-sm-2" maxlenght="3"
-              pattern="/^{1-120}\d+$/">
-          </div>
-
-          <div class="form-inline">
-            <button id="dato" class="btn btn-dark my-2 my-sm-0 btn-sm">Datos</button>
-          </div>
-      </nav>
-    </form>
-      <button class="btn btn-info my-3" id="guardar">Guardar</button>
+      <div class="col-sm3">
+        <label for="empleado">Nombre:</label>
+        <input type="number" id="empleado" placeholder="¿Quién?" class="form-control" max="120" min="1" onchange="valempleado();" required>
+      </div>
+      </div>
+      <button class="btn btn-info my-3" id="guardar">Guardar></button>
       <div id="act"></div>
+      <div class="col-sm-3"></div>
+      </form>
 
       <table class="table">
         <thead>
           <tr>
+            <th scope="col">Id</th>
             <th scope="col">Tipo</th>
-            <th scope="col">Iden</th>
-            <th scope="col">FechaIni</th>
-            <th scope="col">FechaFin</th>
+            <th scope="col">Terreno</th>
+            <th scope="col">FechaInicio</th>
+            <th scope="col">Fecha Finin</th>
             <th scope="col">Cuando</th>
-            <th scope="col">Comercial</th>
+            <th scope="col">Empleado</th>
+            <th scope="col">Editar</th>
+            <th scope="col">Eliminar</th>
           </tr>
         </thead>
         <tbody id="tabla">
@@ -144,9 +159,12 @@ function contenidosUsuarioRegistrado(usuario) {
       </table>
     `;
     cargarTabla();
-    $("#dato").html(`<button id="dato" class="btn btn-danger btn-sm ml-2">Cerrar sesión</button>`);
-    var ce = document.getElementById("dato");
-    ce.addEventListener("click", dato, false);
+    $("#cerrarconexion").html(`<button id="cerrar" class="btn btn-info btn-sm ml-2">Cerrar sesión</button>`);
+    var ce = document.getElementById("cerrar");
+    ce.addEventListener("click", cerrar, false);
+    var gu = document.getElementById("guardar");
+    gu.addEventListener("click", guardar, false);
+
   } else {
     contenido.innerHTML = `
       <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
@@ -162,26 +180,6 @@ function contenidosUsuarioRegistrado(usuario) {
   }
 }
 
-function cargarTabla() {
-  db.collection("teritorios").onSnapshot(function (querySnapshot) {
-    var tabla = document.getElementById("tabla");
-    tabla.innerHTML = "";
-    querySnapshot.forEach(function (doc) {
-      tabla.innerHTML += `
-        <tr>
-          <th scope="row">${doc.id}</th>
-          <td>${doc.data().tipo}</td>
-          <td>${doc.data().iden}</td>
-          <td>${doc.data().fechaIni}</td>
-          <td>${doc.data().fechaFin}</td>
-          <td>${doc.data().cuando}</td>
-          <td>${doc.data().comercial}</td>
-        </tr>
-      `;
-    });
-  });
-}
-
 function cerrar() {
   firebase.auth().signOut()
     .then(function () {
@@ -189,7 +187,7 @@ function cerrar() {
       $("#botones").css("visibility", "visible");
       $("#cerrarconexion").css("display", "none");
       contenido.innerHTML = `
-      <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+      <div class="alert alert-warning alert-dismissible fade show mt-2" role="alert">
         <strong>¡Cáspitas!</strong> Esperamos verte pronto otra vez por nuestro portal.
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -215,127 +213,193 @@ function confirmar() {
   });
 }
 
-
-function guardarTerritorios() {
-  tipo = document.getElementById("tipo").value;
-  iden = document.getElementById("iden").value;
-  fechaIni = document.getElementById("fechaIni").value;
-  fechaIni = document.getElementById("fechaFin").value;
-  cuando = document.getElementById("cuando").value;
-  comercial == document.getElementById("comercial").value;
-  if (tipo.trim() === "" || iden.trim() === "" || fechaIni.trim() === "" || fechaFin.trim() === "" || cuando.trim() === "" || comercial.trim() === "") {
+function guardar() {
+  var tipo = document.getElementById("tipo").value;
+  var iden = document.getElementById("iden").value;
+  var fechaIni = document.getElementById("fechaIni").value;
+  var fechaFin = document.getElementById("fechaFin").value;
+  var cuando = document.getElementById("cuando").value;
+  var empleado = document.getElementById("empleado").value;
+  if (tipo.trim() === "" || iden.trim() === "" || fechaIni.trim() === "" || fechaFin.trim() === "" || cuando.trim() === "" || empleado.trim() === "") {
     alert("Todos los datos son obligatorios.");
   } else {
-    var territorios = {
-      tipo: tipo,
-      iden: iden,
-      fechaIni: fechaIni,
-      fechaIni: fechaFin,
-      cuando: cuando,
-      comercial: comercial
+    var usuario = {
+      tipo: tipos,
+      iden: idens,
+      fechaIni: fechaInis,
+      fechaFin: fechaFins,
+      cuando: cuandos,
+      empleado: empleados,
     };
+
+    db.collection("usuarios").add(usuario)
+      .then(function (docRef) {
+        console.log("Documento escrito con ID: ", docRef.id);
+        document.getElementById("tipo").value = "";
+        document.getElementById("iden").value = "";
+        document.getElementById("fechaIni").value = "";
+        document.getElementById("fechaFin").value = "";
+        document.getElementById("cuando").value = "";
+        document.getElementById("empleado").value = "";
+      })
+      .catch(function (error) {
+        console.error("Error añadiendo el documento: ", error);
+      });
   }
 }
 
 // Lectura de los documentos
-
+function cargarTabla() {
+  db.collection("usuarios").onSnapshot((querySnapshot) => {
+    var tabla = document.getElementById("tabla");
+    tabla.innerHTML = "";
+    querySnapshot.forEach((doc) => {
+      tabla.innerHTML += `
+        <tr>
+          <th scope="row">${doc.id}</th>
+          <td>${doc.data().tipo}</td>
+          <td>${doc.data().iden}</td>
+          <td>${doc.data().fechaIni}</td>
+          <td>${doc.data().fechaFin}</td>
+          <td>${doc.data().cuando}</td>
+          <td>${doc.data().empleado}</td>
+          <td><button class="linea btn btn-success" onclick="editar('${doc.id}', '${doc.data().tipo}', '${doc.data().iden}', '${doc.data().fechaIni}', '${doc.data().fechaFin}', '${doc.data().cuando}', '${doc.data().empleado}');">Editar</button></td>
+          <td><button class="linea btn btn-danger" onclick="borrar('${doc.id}');">Eliminar</button></td>
+        </tr>
+        `;
+    });
+  });
+}
 
 // Borrar datos de documentos
-function borrarDatos(parId, parTipo, parIden,parfechaIni, parfechaFin, parCuando, parComercial) {
-  var re = confirm("¿Está seguro que quiere borrar este usuario: " + parNombre + ' ' + parApellido + ''+ parTipo + '' + parIden + '' + parfechaIni + '' +  parfechaFin + '' +  parCuando+ '' + parComercial + "?");
+function borrarDatos(parId) {
+  var re = confirm("¿Está seguro que quiere borrar el campo " + parId + "?");
   if (re == true) {
-    db.collection("territorios").doc(parId).delete()
+    db.collection("usuarios").doc(parId).delete()
       .then(function () {
         console.log("Dato borrado correctamente.");
       }).catch(function (error) {
         console.error("Error: ", error);
       });
   }
-}
 
+  //  Editar datos de documentos
+  function editarDatos(parId, parTipo, parIden, parfechaIni, parfechaFin, parCuando, parEmpleado) {
+    document.getElementById("tipo").value = parTipo;
+    document.getElementById("iden").value = parIden
+    document.getElementById("fechaIni").value = parfechaIni;
+    document.getElementById("fechaFin").value = parfechaFin;
+    document.getElementById("cuando").value = parCuando;
+    document.getElementById("empleado").value = parEmpleado;
 
-function fechaIni() {
-  var fechaIni = document.getElementById("fechaIni").value;
+    $("#guardar").css("display", "none");
+    $(".linea").attr("disabled", true);
+    $("#act").append("<button class='btn btn-info my-3' id='actualizar'>Guardar</button>");
+    $("#actualizar").on("click", function () {
+      var userRef = db.collection("usuarios").doc(parId);
+      tipos = document.getElementById("tipo").value;
+      idens = document.getElementById("iden").value;
+      fechaInis = document.getElementById("fechaIni").value;
+      fechaFins = document.getElementById("fechaFin").value;
+      cuandos = document.getElementById("cuando").value;
+      empleados == document.getElementById("empleado").value;
 
-  fechaIni = new Date(fechaIni.split("/").reverse().join("/"));
-  if (fechaIni > new Date()) {
-    console.log("dato incorrecto");
-  } else {
-    console.log("dato correcto");
+      if (tipos.trim() === "" || idens.trim() === "" || fechaInis.trim() === "" || fechaFins.trim() === "" || cuandos.trim() === "" || empleados.trim() === "") {
+        alert("Todos los datos son obligatorios.");
+        return false;
+      } else {
+        return userRef.update({
+            tipo: document.getElementById("tipo").value,
+            iden: document.getElementById("iden").value,
+            fechaIni: document.getElementById("fechaIni").value,
+            fechaFin: document.getElementById("fechaFin").value,
+            cuando: document.getElementById("cuando").value,
+            empleado: document.getElementById("empleado").value
+          })
+          .then(function () {
+            console.log("Usuario actualizado correctamente.");
+            document.getElementById("tipo").value = "";
+            document.getElementById("iden").value = "";
+            document.getElementById("fechaIni").value = "";
+            document.getElementById("fechaFin").value = "";
+            document.getElementById("cuando").value = "";
+            document.getElementById("empleado").value = "";
+            $("#guardar").css("display", "inline");
+            $(".linea").attr("disabled", false);
+            $("#act").empty();
+          })
+          .catch(function (error) {
+            // The document probably doesn't exist.
+            console.error("Error actualizando datos: ", error);
+          });
+      }
+    })
   }
-}
 
-var tipo = function tipo() {
-  if (/^(?:[1-9]|0[1-9]|10)$/) {
-    return true
-  } else {
-    return false
-  }
-
-}
-
-var tipo = function tipo() {
-  if (/^(?:[1-9]|0[1-9]|10)$/) {
-    return true
-  } else {
-    return false
-  }
-}
-
-
-
-
-// Editar datos de documentos
-function editarDatos(parId, parTipo, parIden,parfechaIni, parfechaFin, parCuando, parComercial) {
-  document.getElementById("tipo").value = parTipo;
-  document.getElementById("iden").value = parIden
-  document.getElementById("fechaIni").value= parfechaIni;
-  document.getElementById("fechaFin").value= parfechaFin;
-  document.getElementById("cuando").value = parCuando;
-  document.getElementById("comercial").value= parComercial;
-
-  $("#guardar").css("display", "none");
-  $(".linea").attr("disabled", true);
-  $("#act").append("<button class='btn btn-info my-3' id='actualizar'>Guardar</button>");
-  $("#actualizar").on("click", function () {
-    var userRef = db.collection("territorios").doc(parId);
-    tipo = document.getElementById("tipo").value;
-    iden = document.getElementById("iden").value;
-    fechaIni = document.getElementById("fechaIni").value;
-    fechaIni = document.getElementById("fechaFin").value;
-    cuando = document.getElementById("cuando").value;
-    comercial == document.getElementById("comercial").value;
-
-    if (nombre.trim() === "" || apellido.trim() === "" || nacimiento.trim() === "") {
-      alert("Todos los datos son obligatorios.");
+  function valtipo() {
+    var patt = /^(?:[1-9]|0[1-9]|10)$/;
+    var tipos = document.getElementById("tipo").value;
+    if (!patt.test(tipos)) {
+      alert("Dato incorrecto, introduzca un dato del 1 a 10.");
+      return false;
     } else {
-      return userRef.update({
-        tipo : document.getElementById("tipo").value,
-        iden : document.getElementById("iden").value,
-        fechaIni : document.getElementById("fechaIni").value,
-        fechaIni : document.getElementById("fechaFin").value,
-        cuando : document.getElementById("cuando").value,
-        comercial : document.getElementById("comercial").value,
-        })
-      .then(function () {
-          console.log("Usuario actualizado correctamente.");
-          document.getElementById("nombre").value = "";
-          document.getElementById("tipo").value= "";
-          document.getElementById("iden").value ="";
-          document.getElementById("fechaIni").value= "";
-          document.getElementById("fechaFin").value= "";
-          document.getElementById("cuando").value ="";
-          document.getElementById("comercial").value= "";
-          $("#guardar").css("display", "inline");
-          $(".linea").attr("disabled", false);
-          $("#act").empty();
-        })
-        .catch(function (error) {
-          // The document probably doesn't exist.
-          console.error("Error actualizando usuario: ", error);
-        });
+      return true
     }
-  })
-}
+  }
 
-observador();
+  function validen() {
+    var patt = /^(?:[1-9]|0[1-9]|10)$"/;
+    var idens = document.getElementById("iden").value;
+    if (!patt.test(idens)) {
+      alert("Dato incorrecto, introduzca un dato del 1 a 300.");
+      return false;
+    } else {
+      return true
+    }
+  }
+
+  function valfechaIni() {
+    fechais = new Date(fechaIni.split("/").reverse().join("/"));
+    if (fechais <= new Date(fechaIni.value)) {
+      return true;
+    } else {
+      alert("Dato incorrecto, introduzca una fecha anterior a hoy.")
+      document.getElementById("fechaIni");
+      return false;
+    }
+  }
+
+  function valfechaFin() {
+    fechafs = new Date(fechaIni.split("/").reverse().join("/"));
+    if (fechafs <= new Date(fechaFin.value)) {
+      return true;
+    } else {
+      alert(fechaFins.value + "Dato incorrecto, introduzca una fecha posterior a la fecha inicial.");
+      document.getElementById("fechaFin");
+      return false;
+    }
+  }
+
+  function valcuando() {
+    var patt = /^[A-Za-zÑñÁÉÍÓúáéíóúÇç\s]{1,50}$"/;
+    var cuandos = document.getElementById("cuando").value;
+    if (!patt.test(cuando)) {
+      alert(cuandos.value + "Dato incorrecto, introduzca máximo 50 caracteres.");
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  function valempleado() {
+    var patt = /^(120|1[0-1][0-9]|[1-9]?[0-9])$/;
+    var empleados = document.getElementById("empleado").value;
+    if (patt.test(empleados)) {
+      alert("Dato incorrecto, intruduzca un número entre 1 y 120")
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  observador();
